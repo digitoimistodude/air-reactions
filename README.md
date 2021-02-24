@@ -33,7 +33,7 @@ do_action(
     'echo' => false,
     'post_id' => 5,
     'types' => [
-      'reaction' => [
+      'like' => [
         'icon_path' => get_theme_file_path( 'svg/thumbs-up.svg' ),
         'texts'     => [
           'reaction'   => 'Like this post',
