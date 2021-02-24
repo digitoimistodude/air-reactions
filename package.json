@@ -1,0 +1,37 @@
+{
+  "name": "air-reactions",
+  "version": "1.0.0",
+  "description": "A developer friendly plugin to enable reactions in your posts and comments",
+  "main": "index.js",
+  "scripts": {
+    "development": "webpack --mode=development --progress",
+    "watch": "webpack --mode=development --progress --watch",
+    "production": "webpack --mode=production --no-progress --hide-modules"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/digitoimistodude/air-reactions.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/digitoimistodude/air-reactions/issues"
+  },
+  "homepage": "https://github.com/digitoimistodude/air-reactions#readme",
+  "devDependencies": {
+    "@babel/core": "^7.6.4",
+    "@babel/preset-env": "^7.6.3",
+    "axios": "^0.21.1",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^3.2.0",
+    "file-loader": "^4.2.0",
+    "style-loader": "^1.0.0",
+    "url-loader": "^2.2.0",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.9"
+  },
+  "dependencies": {
+    "core-js": "^3.3.3"
+  }
+}
