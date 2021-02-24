@@ -1,7 +1,7 @@
 
 # Air Reactions
 
-A developer-friendly WordPress-plugin for adding customizable reactions (reactions, hearts, disreactions, shrugs or whatever you feel like) to your content.
+A developer-friendly WordPress-plugin for adding customizable reactions (likes, hearts, dislikes, shrugs or whatever you feel like) to your content.
 
 ## Usage
 
