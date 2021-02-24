@@ -62,7 +62,10 @@ do_action(
 
   ### Allow only registered users to react
 
-  By default, reactions will be saved to user meta to allow users to react once per post. If this is set to `false`, the plugin uses [FingerprintJS](https://github.com/fingerprintjs/fingerprintjs) to set browser fingerprints to reaction events and save the reactions to the option table.
+  By default, reactions will be saved to user meta to allow users to react once per post.
+
+  TODO: If this is set to `false`, the plugin uses [FingerprintJS](https://github.com/fingerprintjs/fingerprintjs) to set browser fingerprints to reaction events and save the reactions to the posts only.
+
 
   Default: `true`
 
