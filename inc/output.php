@@ -18,8 +18,12 @@ function the_output( array $args ) {
   // Enqueue script so it's not enqueued until we are displaying some reactions
   \wp_enqueue_script( 'air-reactions' );
 
+  if ( apply_filters( 'air_reactions_load_default_styles', true ) ) {
+    \wp_enqueue_style( 'air-reactions' );
+  }
+
   $default_args = [
-    'types'   => (array) get_default_types(),
+    'types'   => (array) [ 'heart', 'like', 'dislike' ],
     'post_id' => (int) \get_the_ID(),
     'echo'    => (bool) true,
   ];
@@ -30,19 +34,24 @@ function the_output( array $args ) {
     return new WP_Error( 'wrong post type', 'Comments not allowed for post type of post id' . $args['post_id'] );
   }
 
-  $post_reactions = count_post_reactions( $args['post_id'] );
-  $current_user_id = \get_current_user_id();
+  $types            = get_types();
+  $post_reactions   = count_post_reactions( $args['post_id'] );
+  $current_user_id  = \get_current_user_id();
   $has_user_reacted = has_user_reacted( $args['post_id'], $current_user_id );
 
-  $output = container_start( $args, $has_user_reacted, $current_user_id );
+  $output = container_start( $args, $current_user_id );
 
-  foreach ( $args['types'] as $key => $item ) {
+  foreach ( $args['types'] as $key ) {
+    if ( empty( $types[ $key ] ) ) {
+      return new WP_Error( 'reaction type not found', 'Reaction type ' . $key . ' not defined' );
+    }
+    $item = $types[ $key ];
     $item['reactions'] = ! empty( $post_reactions[ $key ] ) ? $post_reactions[ $key ] : 0;
     $item['user_has_reacted'] = $has_user_reacted === $key;
     $output .= reaction_item( $key, $item, $post_reactions );
   }
 
-  $output .= container_end( $args, $has_user_reacted, $current_user_id );
+  $output .= container_end( $args, $current_user_id );
 
   if ( $args['echo'] ) {
     // This output has already been escaped while building it
@@ -65,15 +74,14 @@ function reaction_item( string $key, array $item ) {
   ];
 
   if ( $item['user_has_reacted'] ) {
-    $classes = [
-      'air-reactions__item--reacted',
-    ];
+    $classes[] = 'air-reactions__item--reacted';
   }
 
   ob_start();
   ?>
 
-  <div class="<?php echo esc_attr( join( ' ', $classes ) ); ?>" data-air-reaction-item="<?php echo esc_attr( $key ); ?>">
+  <div class="<?php echo esc_attr( join( ' ', $classes ) ); ?>"
+    data-air-reaction-item="<?php echo esc_attr( $key ); ?>">
 
     <button type="button" class="air-reaction__button" <?php echo can_user_reaction() ? '' : 'disabled' ?> >
 
@@ -99,7 +107,9 @@ function reaction_item( string $key, array $item ) {
       <?php echo esc_html( $item['texts']['amount_post'] ); ?>
     </span>
 
-    </div>
+    </div><!-- air-reaction__item-count -->
+
+  </div><!-- .air-reactions__item -->
 
   <?php
 
@@ -118,8 +128,8 @@ function container_start( array $args, int $current_user_id ) {
   ?>
   <div class="air-reactions"
     data-air-reaction-id="<?php echo esc_attr( $args['post_id'] ); ?>"
-    data-air-reaction-user="<?php echo esc_attr( $current_user_id ); ?>">
-
+    data-air-reaction-user="<?php echo esc_attr( $current_user_id ); ?>"
+    data-air-reaction-user-reaction="<?php echo esc_attr( has_user_reacted( $args['post_id'], $current_user_id ) ); ?>">
   <?php
   $output = ob_get_clean();
 
@@ -134,8 +144,7 @@ function container_start( array $args, int $current_user_id ) {
 function container_end( array $args, int $current_user_id ) {
   ob_start();
   ?>
-    </div>
-  </div>
+  </div><!-- .air-reactions -->
   <?php
   $output = ob_get_clean();
 
