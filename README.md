@@ -13,7 +13,7 @@ Use shortcode `[air-reactions]` in your content or call hook `air_reactions_disp
 do_action( 'air_reactions_display', [] );
 ```
 
-It will echo the reaction container with default buttons where called. You can specify the reaction types using ['air_reactions_types' filter.](#set-default-reaction-types)
+It will echo the reaction container with default buttons where called. You can specify the reaction types using ['air_reactions_types'](#set-default-reaction-types) filter.
 
 ### Advanced usage
 
@@ -81,15 +81,12 @@ do_action(
 
   ### Allow only registered users to react
 
-  By default, reactions will be saved to user meta to allow users to react once per post.
-
-  TODO: If this is set to `false`, use localstorage or [FingerprintJS](https://github.com/fingerprintjs/fingerprintjs) to set browser fingerprints to reaction events and save the reactions to the posts only.
-
+  By default, reactions will be saved to user meta to allow users to react once per post. If this is set to `false`, use localstorage and [FingerprintJS](https://github.com/fingerprintjs/fingerprintjs) to set browser fingerprints to reaction events and save the reactions to the posts only.
 
   Default: `true`
 
   ```
-  add_filter( 'air_reactions_only_registered_users', function( (bool) $allow_only_logged_in_users ) {
+  add_filter( 'air_reactions_require_login', function( (bool) $require_login ) {
     return true;
   } );
   ```
@@ -187,5 +184,13 @@ do_action(
   add_filter( 'air_reactions_container_start', function( (string) $output, (array) $args, (bool), (int) $current_user_id ) {
     // Do something
     return $output;
+  });
+  ```
+
+  ### Customize message shown to non-logged in users when login is required
+
+  ```
+  add_filter( 'air_reactions_login_required_message', function() {
+    return 'Login to like this';
   });
   ```
