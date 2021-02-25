@@ -148,7 +148,7 @@ do_action(
   ```
   #### Example:
   ```
-  add_filter( 'air_reactions_default_types', function( (array) $default_types ) {
+  add_filter( 'air_reactions_types', function( (array) $default_types ) {
     return [
       'heart' => [
         'icon_path' => get_theme_file_path( 'svg/heart.svg' ),
