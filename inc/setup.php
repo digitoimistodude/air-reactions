@@ -30,4 +30,11 @@ function register_scripts() {
       'nonce' => wp_create_nonce( 'wp_rest' ),
     ]
   );
+
+  wp_register_style(
+    'air-reactions',
+    plugin_dir_url( __DIR__ ) . 'css/style.css',
+    [],
+    filemtime( plugin_dir_path( __DIR__ ) . 'css/style.css' )
+  );
 }
