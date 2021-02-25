@@ -13,7 +13,7 @@ Call hook `air_reactions_display` on your template file
 do_action( 'air_reactions_display', [] );
 ```
 
-It will echo the reaction container with default buttons where called. You can specify the default buttons using ['air_reactions_default_types' filter.](#set-default-reaction-types)
+It will echo the reaction container with default buttons where called. You can specify the reaction types using ['air_reactions_types' filter.](#set-default-reaction-types)
 
 ### Advanced usage
 
@@ -26,27 +26,30 @@ Available parameters are:
   ]
 ```
 #### Example:
+
+This will return the markup for reacting the post id '5' with only hearts
 ```
 do_action(
   'air_reactions_display',
   [
     'echo' => false,
     'post_id' => 5,
-    'types' => [
-      'reaction' => [
-        'icon_path' => get_theme_file_path( 'svg/thumbs-up.svg' ),
-        'texts'     => [
-          'reaction'   => 'Like this post',
-          'amount_pre' => 'Likesd',
-          'amount_post' => 'times',
-        ],
-      ],
-    ],
+    'types' => [ 'heart' ],
   ]
 )
 ```
 
 ## Hooks
+
+  ### Load default styles
+
+  Set false to not load reaction styles from plugin, if you are going to write them in your theme
+
+  Default: `true`
+
+  ```
+  add_filter( 'air_reactions_load_default_styles', '__return_false' );
+  ```
 
   ### Set allowed post types
 
@@ -64,7 +67,7 @@ do_action(
 
   By default, reactions will be saved to user meta to allow users to react once per post.
 
-  TODO: If this is set to `false`, the plugin uses [FingerprintJS](https://github.com/fingerprintjs/fingerprintjs) to set browser fingerprints to reaction events and save the reactions to the posts only.
+  TODO: If this is set to `false`, use localstorage or [FingerprintJS](https://github.com/fingerprintjs/fingerprintjs) to set browser fingerprints to reaction events and save the reactions to the posts only.
 
 
   Default: `true`
@@ -87,10 +90,10 @@ do_action(
   } );
   ```
 
-  ### Filter post reactions after they are loaded from meta
+  ### Filter post reactions after they are loaded from meta and counted
 
   ```
-  add_filter( 'air_reactions_get_post_reactions', function( (array) $post_reactions, (int) $post_id, (string) $meta_key ) {
+  add_filter( 'air_reactions_count_post_reactions', function( (array) $post_reactions, (int) $post_id, (string) $meta_key ) {
     // Do something
     return $post_reactions;
   } )
