@@ -83,7 +83,7 @@ function reaction_item( string $key, array $item ) {
   <div class="<?php echo esc_attr( join( ' ', $classes ) ); ?>"
     data-air-reaction-item="<?php echo esc_attr( $key ); ?>">
 
-    <button type="button" class="air-reaction__button" <?php echo can_user_reaction() ? '' : 'disabled' ?> >
+    <button type="button" class="air-reaction__button">
 
     <span class="screen-reader-text">
       <?php echo esc_html( $item['texts']['reaction'] ); ?>

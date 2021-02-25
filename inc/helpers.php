@@ -13,7 +13,7 @@ namespace Air_Reactions;
  *
  * @return boolean Is user allowed to reaction
  */
-function can_user_reaction() {
+function can_user_react() {
   $allow_only_logged_in_users = apply_filters( 'air_reactions_only_registered_users', true );
 
   if ( $allow_only_logged_in_users ) {
