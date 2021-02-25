@@ -47,7 +47,7 @@ function get_user_reactions( int $user_id ) {
  */
 function has_user_reacted( int $post_id, int $user_id ) {
   $user_reactions = get_user_reactions( $user_id );
-  if ( ! in_array( $post_id, $user_reactions, true ) ) {
+  if ( empty( $user_reactions[ $post_id ] ) ) {
     return false;
   }
 
@@ -59,7 +59,7 @@ function has_user_reacted( int $post_id, int $user_id ) {
  *
  * @return array filtered set of default types
  */
-function get_default_types() {
+function get_types() {
   $default_types = [
     'heart' => [
       'icon_path' => plugin_dir_path( __DIR__ ) . 'svg/heart.svg',
@@ -87,7 +87,7 @@ function get_default_types() {
     ],
   ];
 
-  return apply_filters( 'air_reactions_default_types', (array) $default_types );
+  return apply_filters( 'air_reactions_types', (array) $default_types );
 }
 
 /**
@@ -154,14 +154,17 @@ function save_reaction( int $post_id, int $user_id, string $type ) {
  */
 function count_post_reactions( $post_id ) {
   $post_reactions = \get_post_meta( $post_id, META_FIELD_KEY, true ) ?: [];
+
+  $types = array_keys( get_types() );
   $post_reaction_count = [];
-  foreach ( $post_reactions as $user_id => $type ) {
-    if ( empty( $post_reaction_count[ $type ] ) ) {
-      $post_reaction_count[ $type ] = 1;
-    } else {
-      $post_reaction_count[ $type ] += 1;
-    }
+
+  foreach ( $types as $key ) {
+    $post_reaction_count[ $key ] = 0;
   }
 
-  return apply_filters( 'air_reactions_get_post_reactions', (array) $post_reaction_count, (int) $post_id, (string) META_FIELD_KEY );
+  foreach ( $post_reactions as $type ) {
+    $post_reaction_count[ $type ] += 1;
+  }
+
+  return apply_filters( 'air_reactions_count_post_reactions', (array) $post_reaction_count, (int) $post_id, (string) META_FIELD_KEY );
 }
