@@ -80,6 +80,9 @@ export default class AirReaction {
     const currentItem = this.findItem(type);
     // Disable the button while we handle request
     currentItem.reactionButton.disabled = true;
+
+    // Add class so the user won't think the click didn't happen
+    currentItem.elem.classList.add( this.reactedClass );
     const formData = {
       id: this.id,
       type: type,
@@ -88,14 +91,21 @@ export default class AirReaction {
     this.api.post('/add-reaction', formData)
       .then((response) => {
         this.toggleReaction(type);
+        if ( 'message' in response.data ) {
+          this.showMessage(response.data.message);
+        }
         if ( 'items' in response.data ) {
           this.updateCount(response.data.items);
         }
         currentItem.reactionButton.disabled = false;
       })
-      .catch((error) => {
+      .catch((error,) => {
+        debugger;
         // eslint-disable-next-line no-console
         console.log(error);
+
+        // Remove class we added when we started to toggle
+        currentItem.elem.classList.remove( this.reactedClass );
         currentItem.reactionButton.disabled = false;
     });
 
@@ -186,5 +196,16 @@ export default class AirReaction {
       item.count = itemCount;
       item.countElem.innerHTML = itemCount;
     }
+  }
+
+  showMessage(message) {
+    // Show this only once
+    if ( this.elem.querySelector( 'p.error-message' ) ) {
+      return;
+    }
+    const messageElem = document.createElement('p');
+    messageElem.classList.add( 'error-message');
+    messageElem.innerHTML = message;
+    this.elem.appendChild(messageElem);
   }
 }

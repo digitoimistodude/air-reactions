@@ -7,6 +7,8 @@
 
 namespace Air_Reactions;
 
+use WP_Error;
+
 /**
  * Register the REST API route for reactions
  */
@@ -17,7 +19,7 @@ function register_reaction_api() {
     [
       'methods' => 'post',
       'callback' => __NAMESPACE__ . '\save_reaction_callback',
-      'permission_callback' => __NAMESPACE__ . '\can_user_reaction',
+      'permission_callback' => '__return_true',
     ]
   );
 }
@@ -32,13 +34,33 @@ function save_reaction_callback( $request ) {
     return;
   }
 
+  if ( ! can_user_react() ) {
+    $response['message'] = apply_filters( 'air_reactions_not_allowed_message', __( 'Please login to react this', 'air-reactions' ) );
+
+    return $response;
+  }
+
   $id = sanitize_key( $request->get_param( 'id' ) );
   $type = sanitize_key( $request->get_param( 'type' ) );
   $current_user = get_current_user_id();
 
   save_reaction( $id, $current_user, $type );
 
-  return [
+  $response = [
     'items' => count_post_reactions( $id ),
   ];
+
+  return $response;
+}
+
+/**
+ * Permission callback
+ */
+function permission_callback() {
+  if ( can_user_react() ) {
+    return true;
+  }
+  $message = apply_filters( 'air_reactions_not_allowed_message', __( 'Please login to react this', 'air-reactions' ) );
+
+  return new WP_Error( 'insufficient permissions', $message );
 }
