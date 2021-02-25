@@ -14,9 +14,9 @@ namespace Air_Reactions;
  * @return boolean Is user allowed to reaction
  */
 function can_user_react() {
-  $allow_only_logged_in_users = apply_filters( 'air_reactions_only_registered_users', true );
+  $require_login = apply_filters( 'air_reactions_require_login', DEFAULT_REQUIRE_LOGIN );
 
-  if ( $allow_only_logged_in_users ) {
+  if ( $require_login ) {
     $capability = apply_filters( 'air_reactions_capability', 'read' );
 
     return current_user_can( $capability );
@@ -119,7 +119,7 @@ function is_post_type_allowed( $post_id ) {
  * @param int|string $user_id User id or hash
  * @param string     $type Reaction type
  */
-function save_reaction( $post_id, int $user_id, string $type ) {
+function save_reaction( $post_id, $user_id, string $type ) {
   $meta = is_comment( $post_id ) ? get_comment_meta( parse_comment_id( $post_id ), META_FIELD_KEY, true ) : get_post_meta( $post_id, META_FIELD_KEY, true );
 
   $post_reactions = is_array( $meta ) ? $meta : [];
@@ -197,4 +197,20 @@ function is_comment( $post_id ) {
  */
 function parse_comment_id( $post_id ) {
  return intval( str_replace( 'comment-', '', $post_id ), 10 );
+}
+
+function enqueue_scripts() {
+  $settings = [
+    'requireLogin'         => apply_filters( 'air_reactions_require_login', DEFAULT_REQUIRE_LOGIN ),
+    'loginRequiredMessage' => apply_filters( 'air_reactions_login_required_message', __( 'Please login to react this', 'air-reactions' ) ),
+  ];
+
+  wp_localize_script( 'air-reactions', 'airReactionsSettings', $settings );
+
+  // Enqueue script so it's not enqueued until we are displaying some reactions
+  \wp_enqueue_script( 'air-reactions' );
+
+  if ( apply_filters( 'air_reactions_load_default_styles', true ) ) {
+    \wp_enqueue_style( 'air-reactions' );
+  }
 }

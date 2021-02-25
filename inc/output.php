@@ -15,12 +15,7 @@ use WP_Error;
  * @param array $args Reaction button arguments
  */
 function the_output( array $args ) {
-  // Enqueue script so it's not enqueued until we are displaying some reactions
-  \wp_enqueue_script( 'air-reactions' );
-
-  if ( apply_filters( 'air_reactions_load_default_styles', true ) ) {
-    \wp_enqueue_style( 'air-reactions' );
-  }
+  enqueue_scripts();
 
   $default_args = [
     'types'      => (array) [ 'heart', 'like', 'dislike' ],
