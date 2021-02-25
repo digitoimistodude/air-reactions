@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Air Reactions
  * Description: A developer-friendly WordPress-plugin for adding customizable reactions (reactions, hearts, disreactions, shrugs or whatever you feel reaction) to your content.
- * Version: 0.4.0
+ * Version: 0.9.0
  * Author: Digitoimisto Dude Oy, Niku Hietanen
  * Author URI: https://www.dude.fi
  * Requires at least: 5.0
@@ -22,10 +22,11 @@ if ( ! defined( 'ABSPATH' ) ) {
   exit();
 }
 
-const PLUGIN_VERSION = '0.4.0';
+const PLUGIN_VERSION = '0.9.0';
 const META_FIELD_KEY = '_air-reactions';
 const REST_NAMESPACE = 'air-reactions/v1';
 const REST_ROUTE = 'add-reaction/';
+const DEFAULT_REQUIRE_LOGIN = false;
 
 /**
  * Plugin setup, script registering etc.
