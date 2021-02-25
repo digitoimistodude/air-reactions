@@ -1,0 +1,16 @@
+{
+  "name": "digitoimistodude/air-reactions",
+  "type": "wordpress-plugin",
+  "description": "A developer-friendly WordPress-plugin for adding customizable reactions (likes, hearts, dislikes, shrugs or whatever you feel like) to your content.",
+  "keywords": [
+    "wordpress",
+    "plugin"
+  ],
+  "license": "GPL-3.0+",
+  "version": "0.2.0",
+  "authors": [{
+    "name": "Niku Hietanen",
+    "email": "niku@dude.fi",
+    "homepage": "https://github.com/niq1982"
+  }]
+}
