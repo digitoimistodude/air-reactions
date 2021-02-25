@@ -2,7 +2,7 @@
  * Air Reaction
  */
 export default class AirReaction {
-  constructor(reactionElement, api) {
+  constructor(reactionElement, api, settings) {
     if (! ('airReactionId' in reactionElement.dataset)) {
       return false;
     }
@@ -12,7 +12,8 @@ export default class AirReaction {
     this.id           = reactionElement.dataset.airReactionId;
     this.storageKey   = `air-reaction-${this.id}`;
     this.userReaction = 'airReactionUserReaction' in reactionElement.dataset && reactionElement.dataset.airReactionUserReaction !== 'false' ? reactionElement.dataset.airReactionUserReaction : false;
-    this.user         = 'airReactionUser' in reactionElement.dataset ? reactionElement.dataset.airReactionUser : 0;
+    this.user         = 'airReactionUser' in reactionElement.dataset ? parseInt( reactionElement.dataset.airReactionUser, 10 ) : 0;
+    this.settings     = settings;
     this.items        = this.buildItems();
 
     this.items.forEach((item) => {
@@ -76,31 +77,39 @@ export default class AirReaction {
    * @param {string} type Reaction type
    */
   toggle(type) {
-
     const currentItem = this.findItem(type);
+
     // Disable the button while we handle request
     currentItem.reactionButton.disabled = true;
 
+    if ( this.settings.requireLogin && ! this.user ) {
+      this.showMessage(this.settings.loginRequiredMessage);
+      currentItem.reactionButton.disabled = false;
+      return;
+    }
+
     // Add class so the user won't think the click didn't happen
     currentItem.elem.classList.add( this.reactedClass );
+
     const formData = {
       id: this.id,
       type: type,
     };
 
+    // Use visitor thumbnail for user id
+    if ( ! this.user ) {
+      formData.visitorId = this.settings.visitorId;
+    }
+
     this.api.post('/add-reaction', formData)
       .then((response) => {
         this.toggleReaction(type);
-        if ( 'message' in response.data ) {
-          this.showMessage(response.data.message);
-        }
         if ( 'items' in response.data ) {
           this.updateCount(response.data.items);
         }
         currentItem.reactionButton.disabled = false;
       })
-      .catch((error,) => {
-        debugger;
+      .catch((error) => {
         // eslint-disable-next-line no-console
         console.log(error);
 
@@ -114,8 +123,8 @@ export default class AirReaction {
    * Get the cookie from the storage
    */
   getCookie() {
-    if (! ('localStorage' in window)) {
-      return;
+    if (! ('localStorage' in window) || this.settings.requireLogin) {
+      return false;
     }
     return localStorage.getItem(this.storageKey);
   }
@@ -126,7 +135,7 @@ export default class AirReaction {
    * @param {mixed} value The value to save to cookie
    */
   setCookie(value) {
-    if (! ('localStorage' in window)) {
+    if (! ('localStorage' in window) || this.settings.requireLogin) {
       return;
     }
     localStorage.setItem(this.storageKey, value);
@@ -136,7 +145,7 @@ export default class AirReaction {
    * Remove cookie
    */
   removeCookie(value) {
-    if (! ('localStorage' in window)) {
+    if (! ('localStorage' in window) || this.settings.requireLogin) {
       return;
     }
     localStorage.removeItem(this.storageKey);
