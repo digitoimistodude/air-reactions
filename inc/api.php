@@ -37,4 +37,8 @@ function save_reaction_callback( $request ) {
   $current_user = get_current_user_id();
 
   save_reaction( $id, $current_user, $type );
+
+  return [
+    'items' => count_post_reactions( $id ),
+  ];
 }
