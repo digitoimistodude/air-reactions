@@ -1,0 +1,43 @@
+  .air-reactions {
+    display: flex;
+  }
+
+  .air-reactions__item {
+    display: flex;
+    align-items: center;
+    margin-right: 1rem;
+  }
+
+  .air-reactions__item button {
+    background-color: transparent;
+    border: 0;
+    color: gray;
+    padding: 1rem;
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .air-reactions__item button svg {
+    width: 2rem;
+  }
+
+  .air-reactions__item button:hover {
+    background-color: transparent;
+    color: gray;
+  }
+  .air-reactions__item button:not(button[disabled]):hover {
+    transform: scale(1.3);
+    color: black;
+  }
+
+  .air-reactions__item--heart button:not(button[disabled]):hover {
+    color: red;
+  }
+
+  .air-reactions__item--reacted button {
+    color: blue;
+  }
+
+  .air-reactions__item--reacted.air-reactions__item--heart button {
+    color: red;
+  }
+
