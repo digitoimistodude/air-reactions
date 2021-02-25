@@ -38,3 +38,32 @@ function register_scripts() {
     filemtime( plugin_dir_path( __DIR__ ) . 'css/style.css' )
   );
 }
+
+/**
+ * Register shortcode
+ *
+ * @param string|array $atts Shortcode atts
+ */
+function register_shortcode( $atts ) {
+  $args = [];
+
+  if ( is_array( $atts ) ) {
+    foreach ( $atts as $key => $value ) {
+      $parsed_value = null;
+      if ( 'types' === $key ) {
+        $value_array = explode( ',', $value );
+        $parsed_value = array_map( function ( $value ) {
+          return trim( $value );
+        }, $value_array );
+      } else if ( 'post_id' === $key ) {
+        $parsed_value = intval( $value );
+      } else {
+        $parsed_value = $value;
+      }
+      $args[ $key ] = $parsed_value;
+    }
+  }
+
+  $args['echo'] = false;
+	return the_output( (array) $args );
+}

@@ -7,7 +7,7 @@ A developer-friendly WordPress-plugin for adding customizable reactions (likes, 
 
 ### Basic usage
 
-Call hook `air_reactions_display` on your template file
+Use shortcode `[air-reactions]` in your content or call hook `air_reactions_display` on your template file
 
 ```
 do_action( 'air_reactions_display', [] );
@@ -37,6 +37,11 @@ do_action(
     'types' => [ 'heart' ],
   ]
 )
+```
+
+Same as a shortcode (echoing is always disabled in shortcode):
+```
+[air-reactions types="heart" post_id="5"]
 ```
 
 ## Hooks

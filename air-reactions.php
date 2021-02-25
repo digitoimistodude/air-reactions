@@ -32,6 +32,7 @@ const REST_ROUTE = 'add-reaction/';
  */
 require plugin_dir_path( __FILE__ ) . 'inc/setup.php';
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\register_scripts' );
+add_shortcode( 'air-reactions', __NAMESPACE__ . '\register_shortcode' );
 
 /**
  * API related
