@@ -6,11 +6,11 @@ export default class AirReaction {
     if (! ('airReactionId' in reactionElement.dataset)) {
       return false;
     }
-    this.storageKey   = `air-reaction-${this.id}`;
     this.reactedClass = 'air-reactions__item--reacted';
     this.api          = api;
     this.elem         = reactionElement;
     this.id           = reactionElement.dataset.airReactionId;
+    this.storageKey   = `air-reaction-${this.id}`;
     this.userReaction = 'airReactionUserReaction' in reactionElement.dataset && reactionElement.dataset.airReactionUserReaction !== 'false' ? reactionElement.dataset.airReactionUserReaction : false;
     this.user         = 'airReactionUser' in reactionElement.dataset ? reactionElement.dataset.airReactionUser : 0;
     this.items        = this.buildItems();

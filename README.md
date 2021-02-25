@@ -44,6 +44,17 @@ Same as a shortcode (echoing is always disabled in shortcode):
 [air-reactions types="heart" post_id="5"]
 ```
 
+### Usage in comments
+
+Prefix comment id with `comment-` to enable reaction for a comment
+
+```
+do_action(
+  'air_reactions_display',
+  [ 'post_id' => 'comment-' . $comment->comment_ID, ]
+)
+```
+
 ## Hooks
 
   ### Load default styles
@@ -60,7 +71,7 @@ Same as a shortcode (echoing is always disabled in shortcode):
 
   Liking is allowed only on these post types.
 
-  Default: `[ 'post', 'page' ]`
+  Default: `[ 'post', 'page', 'comment' ]`
 
   ```
   add_filter( 'air_reactions_post_types', function( (array) $post_types ) {

@@ -28,11 +28,11 @@ function register_reaction_api() {
  * @param object $request The REST API request
  */
 function save_reaction_callback( $request ) {
-  if ( empty( $request->get_param( 'id' ) ) || ! intval( $request->get_param( 'id' ) || empty( $request->get_param( 'type' ) ) ) ) {
+  if ( empty( $request->get_param( 'id' ) ) || empty( $request->get_param( 'type' ) ) ) {
     return;
   }
 
-  $id = intval( $request->get_param( 'id' ), 10 );
+  $id = sanitize_key( $request->get_param( 'id' ) );
   $type = sanitize_key( $request->get_param( 'type' ) );
   $current_user = get_current_user_id();
 

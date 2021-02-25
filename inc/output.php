@@ -23,15 +23,15 @@ function the_output( array $args ) {
   }
 
   $default_args = [
-    'types'   => (array) [ 'heart', 'like', 'dislike' ],
-    'post_id' => (int) \get_the_ID(),
-    'echo'    => (bool) true,
+    'types'      => (array) [ 'heart', 'like', 'dislike' ],
+    'post_id'    => (int) \get_the_ID(),
+    'echo'       => (bool) true,
   ];
 
   $args = \wp_parse_args( $args, $default_args );
 
   if ( ! is_post_type_allowed( $args['post_id'] ) ) {
-    return new WP_Error( 'wrong post type', 'Comments not allowed for post type of post id' . $args['post_id'] );
+    return new WP_Error( 'wrong post type', 'Reactions not allowed for post type of post id' . $args['post_id'] );
   }
 
   $types            = get_types();

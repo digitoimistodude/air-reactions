@@ -41,11 +41,11 @@ function get_user_reactions( int $user_id ) {
 /**
  * Has user reacted a post?
  *
- * @param int $post_id Post id
- * @param int $user_id User id
+ * @param int|string $post_id Post id
+ * @param int        $user_id User id
  * @return string|bool False if not has reacted, the reaction type if has
  */
-function has_user_reacted( int $post_id, int $user_id ) {
+function has_user_reacted( $post_id, int $user_id ) {
   $user_reactions = get_user_reactions( $user_id );
   if ( empty( $user_reactions[ $post_id ] ) ) {
     return false;
@@ -96,29 +96,33 @@ function get_types() {
  * @return array Array of allowed post types
  */
 function get_allowed_post_types() {
-  return apply_filters( 'air_reactions_post_types', [ 'post', 'page' ] );
+  return apply_filters( 'air_reactions_post_types', [ 'post', 'page', 'comment' ] );
 }
 
 /**
  * Check if post type is allowed
  *
- * @param int $post_id The post id to check
+ * @param int|string $post_id The post id to check
  * @return bool
  */
-function is_post_type_allowed( int $post_id ) {
-  return in_array( get_post_type( $post_id ), get_allowed_post_types(), true );
+function is_post_type_allowed( $post_id ) {
+  if ( is_comment( $post_id ) ) {
+    return in_array( 'comment', get_allowed_post_types(), true );
+  }
+  return in_array( \get_post_type( $post_id ), get_allowed_post_types(), true );
 }
 
 /**
  * Add reaction to post
  *
- * @param int        $post_id Post id
+ * @param int|string $post_id Post id
  * @param int|string $user_id User id or hash
  * @param string     $type Reaction type
  */
-function save_reaction( int $post_id, int $user_id, string $type ) {
+function save_reaction( $post_id, int $user_id, string $type ) {
+  $meta = is_comment( $post_id ) ? get_comment_meta( parse_comment_id( $post_id ), META_FIELD_KEY, true ) : get_post_meta( $post_id, META_FIELD_KEY, true );
 
-  $post_reactions = is_array( get_post_meta( $post_id, META_FIELD_KEY, true ) ) ? get_post_meta( $post_id, META_FIELD_KEY, true ) : [];
+  $post_reactions = is_array( $meta ) ? $meta : [];
 
   // Check if user already reacted and is now trying to reverse the reaction
   if ( ! empty( $post_reactions[ $user_id ] ) && $post_reactions[ $user_id ] === $type ) {
@@ -127,7 +131,11 @@ function save_reaction( int $post_id, int $user_id, string $type ) {
     $post_reactions[ $user_id ] = $type;
   }
 
-  update_post_meta( $post_id, META_FIELD_KEY, $post_reactions );
+  if ( is_comment( $post_id ) ) {
+    update_comment_meta( parse_comment_id( $post_id ), META_FIELD_KEY, $post_reactions );
+  } else {
+    update_post_meta( $post_id, META_FIELD_KEY, $post_reactions );
+  }
 
   // Check if this is an actual user and save to user meta as well
   if ( ! get_user_by( 'id', $user_id ) ) {
@@ -153,7 +161,9 @@ function save_reaction( int $post_id, int $user_id, string $type ) {
  * @return array Array of reaction types with reaction count
  */
 function count_post_reactions( $post_id ) {
-  $post_reactions = \get_post_meta( $post_id, META_FIELD_KEY, true ) ?: [];
+  $meta = is_comment( $post_id ) ? get_comment_meta( parse_comment_id( $post_id ), META_FIELD_KEY, true ) : get_post_meta( $post_id, META_FIELD_KEY, true );
+
+  $post_reactions = is_array( $meta ) ? $meta : [];
 
   $types = array_keys( get_types() );
   $post_reaction_count = [];
@@ -167,4 +177,24 @@ function count_post_reactions( $post_id ) {
   }
 
   return apply_filters( 'air_reactions_count_post_reactions', (array) $post_reaction_count, (int) $post_id, (string) META_FIELD_KEY );
+}
+
+/**
+ * Check if the id is comment
+ *
+ * @param string|int $post_id Post ID
+ * @return bool
+ */
+function is_comment( $post_id ) {
+  return false === strpos( $post_id, 'comment' ) ? false : true;
+}
+
+/**
+ * Parses comment id from comment-34 to 34
+ *
+ * @param string|int $post_id Post ID
+ * @return int The comment id
+ */
+function parse_comment_id( $post_id ) {
+ return intval( str_replace( 'comment-', '', $post_id ), 10 );
 }
