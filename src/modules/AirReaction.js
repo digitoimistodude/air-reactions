@@ -158,6 +158,7 @@ export default class AirReaction {
   toggleReaction(type) {
     let oldReactedItem = false;
     const cookie = this.getCookie();
+    debugger;
     // Check if user has reacted on this
     if (this.userReaction) {
       oldReactedItem = this.findItem(this.userReaction);
@@ -171,7 +172,7 @@ export default class AirReaction {
 
     // If reaction type is not false, add a reaction,
     // if it's false, remove reactions from all
-    if ( type && this.findItem(type) ) {
+    if ( type && oldReactedItem.reactionType !== type && this.findItem(type) ) {
       const newReactedItem = this.findItem(type);
       this.addReaction(newReactedItem);
     }
