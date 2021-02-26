@@ -41,3 +41,6 @@
     color: red;
   }
 
+  .air-reaction__item-amount[data-air-reaction-count="0"] {
+    opacity: 0;
+  }

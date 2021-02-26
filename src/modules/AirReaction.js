@@ -204,6 +204,7 @@ export default class AirReaction {
       const item = this.findItem(itemKeys[index]);
       item.count = itemCount;
       item.countElem.innerHTML = itemCount;
+      item.countElem.dataset.airReactionCount = itemCount;
     }
   }
 
