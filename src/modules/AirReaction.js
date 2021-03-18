@@ -158,7 +158,7 @@ export default class AirReaction {
   toggleReaction(type) {
     let oldReactedItem = false;
     const cookie = this.getCookie();
-    debugger;
+
     // Check if user has reacted on this
     if (this.userReaction) {
       oldReactedItem = this.findItem(this.userReaction);
