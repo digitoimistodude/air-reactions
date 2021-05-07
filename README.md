@@ -194,3 +194,12 @@ do_action(
     return 'Login to like this';
   });
   ```
+
+  ## JavaScript functionality
+
+  Reaction items are queried from DOM and initialized once after page has loaded. You can check for new reaction items, for example after loading content from AJAX, by simply triggering the event `initAirReactions`.
+
+  ```
+  const event = new Event('initAirReactions');
+  window.dispatchEvent(event);
+  ```
