@@ -18,7 +18,7 @@ function the_output( array $args ) {
   enqueue_scripts();
 
   $default_args = [
-    'types'      => (array) [ 'heart', 'like', 'dislike' ],
+    'types'      => (array) \array_keys( get_types() ),
     'post_id'    => (int) \get_the_ID(),
     'echo'       => (bool) true,
   ];
