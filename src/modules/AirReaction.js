@@ -49,22 +49,16 @@ export default class AirReaction {
 
       const button = itemElement.querySelector('button');
 
-      if ( typeof button === 'undefined' ) {
+      if (! button || typeof button === 'undefined') {
         console.warn('button element is missing from reaction-item element');
         continue;
       }
 
       const countElement = itemElement.querySelector('[data-air-reaction-count]');
 
-      if ( typeof countElement === 'undefined' ) {
-        console.warn('count element is missing or it doesnt have "data-air-reaction-count" attribute');
-        continue;
-      }
-
       items.push({
         reactionType: itemElement.dataset.airReactionItem,
         reactionButton: button,
-        count: parseInt(countElement.dataset.airReactionCount, 10 ),
         elem: itemElement,
         countElem: countElement,
       });
@@ -166,13 +160,13 @@ export default class AirReaction {
       oldReactedItem = this.findItem(cookie);
     }
 
-    if ( oldReactedItem ) {
+    if (oldReactedItem) {
       this.removeReaction(oldReactedItem);
     }
 
     // If reaction type is not false, add a reaction,
     // if it's false, remove reactions from all
-    if ( type && oldReactedItem.reactionType !== type && this.findItem(type) ) {
+    if (type && oldReactedItem?.reactionType !== type && this.findItem(type)) {
       const newReactedItem = this.findItem(type);
       this.addReaction(newReactedItem);
     }
@@ -200,10 +194,25 @@ export default class AirReaction {
   updateCount(items) {
     const itemValues = Object.values(items)
     const itemKeys = Object.keys(items);
+
     for (let index = 0; index < itemKeys.length; index++) {
-      const itemCount = parseInt(itemValues[index]);
       const item = this.findItem(itemKeys[index]);
-      item.count = itemCount;
+
+      const itemCountElem = item?.countElem || false;
+      // If false, this means that there's no count element
+      // because it's disabled
+      if (! itemCountElem) {
+        continue;
+      }
+
+      const reactionCount = item?.countElem?.dataset?.airReactionCount || false;
+
+      if (! reactionCount) {
+        console.warn('count element is missing or it doesnt have "data-air-reaction-count" attribute');
+        continue;
+      }
+      const itemCount = parseInt(itemValues[index]);
+
       item.countElem.innerHTML = itemCount;
       item.countElem.dataset.airReactionCount = itemCount;
     }

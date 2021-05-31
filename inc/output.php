@@ -72,6 +72,8 @@ function reaction_item( string $key, array $item ) {
     $classes[] = 'air-reactions__item--reacted';
   }
 
+  $show_item_count = apply_filters( 'air_reactions_show_item_count', true, $key, $item );
+
   ob_start();
   ?>
 
@@ -80,29 +82,31 @@ function reaction_item( string $key, array $item ) {
 
     <button type="button" class="air-reaction__button">
 
-    <span class="screen-reader-text">
-      <?php echo esc_html( $item['texts']['reaction'] ); ?>
-    </span>
-    <?php include $item['icon_path']; ?>
+      <span class="screen-reader-text">
+        <?php echo esc_html( $item['texts']['reaction'] ); ?>
+      </span>
+      <?php include $item['icon_path']; ?>
 
     </button>
 
-    <div class="air-reaction__item-count">
+    <?php if ( $show_item_count ) : ?>
+      <div class="air-reaction__item-count">
 
-    <span class="screen-reader-text">
-      <?php echo esc_html( $item['texts']['amount_pre'] ); ?>
-    </span>
+        <span class="screen-reader-text">
+          <?php echo esc_html( $item['texts']['amount_pre'] ); ?>
+        </span>
 
-    <span class="air-reaction__item-amount"
-    data-air-reaction-count="<?php echo esc_attr( $item['reactions'] ); ?>">
-      <?php echo esc_html( $item['reactions'] ); ?>
-    </span>
+        <span class="air-reaction__item-amount"
+        data-air-reaction-count="<?php echo esc_attr( $item['reactions'] ); ?>">
+          <?php echo esc_html( $item['reactions'] ); ?>
+        </span>
 
-    <span class="screen-reader-text">
-      <?php echo esc_html( $item['texts']['amount_post'] ); ?>
-    </span>
+        <span class="screen-reader-text">
+          <?php echo esc_html( $item['texts']['amount_post'] ); ?>
+        </span>
 
-    </div><!-- air-reaction__item-count -->
+      </div><!-- air-reaction__item-count -->
+    <?php endif; ?>
 
   </div><!-- .air-reactions__item -->
 
