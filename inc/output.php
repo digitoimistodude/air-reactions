@@ -72,7 +72,7 @@ function reaction_item( string $key, array $item ) {
     $classes[] = 'air-reactions__item--reacted';
   }
 
-   $show_item_count = apply_filters( 'air_reactions_show_item_count', true, $key, $item );
+  $show_item_count = apply_filters( 'air_reactions_show_item_count', true, $key, $item );
 
   ob_start();
   ?>
