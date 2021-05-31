@@ -160,13 +160,13 @@ export default class AirReaction {
       oldReactedItem = this.findItem(cookie);
     }
 
-    if ( oldReactedItem ) {
+    if (oldReactedItem) {
       this.removeReaction(oldReactedItem);
     }
 
     // If reaction type is not false, add a reaction,
     // if it's false, remove reactions from all
-    if ( type && oldReactedItem.reactionType !== type && this.findItem(type) ) {
+    if (type && oldReactedItem?.reactionType !== type && this.findItem(type)) {
       const newReactedItem = this.findItem(type);
       this.addReaction(newReactedItem);
     }
@@ -197,13 +197,17 @@ export default class AirReaction {
 
     for (let index = 0; index < itemKeys.length; index++) {
       const item = this.findItem(itemKeys[index]);
+
+      const itemCountElem = item?.countElem || false;
       // If false, this means that there's no count element
       // because it's disabled
-      if (! item.countElem) {
+      if (! itemCountElem) {
         continue;
       }
 
-      if (! ('airReactionCount' in item.countElem.dataset)) {
+      const reactionCount = item?.countElem?.dataset?.airReactionCount || false;
+
+      if (! reactionCount) {
         console.warn('count element is missing or it doesnt have "data-air-reaction-count" attribute');
         continue;
       }
