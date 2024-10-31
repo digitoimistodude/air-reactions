@@ -81,9 +81,9 @@ do_action(
 
   ### Allow only registered users to react
 
-  By default, reactions will be saved to user meta to allow users to react once per post. If this is set to `false`, use localstorage and [FingerprintJS](https://github.com/fingerprintjs/fingerprintjs) to set browser fingerprints to reaction events and save the reactions to the posts only.
+  If this is set to `true`, only logged in users can react. On default mode where everyone can react, use localstorage and [FingerprintJS](https://github.com/fingerprintjs/fingerprintjs) to set browser fingerprints to reaction events and save the reactions to the posts only. If limited to logged in users only, reactions will be saved to user meta to allow users to react once per post. 
 
-  Default: `true`
+  Default: `false`
 
   ```
   add_filter( 'air_reactions_require_login', function( (bool) $require_login ) {
