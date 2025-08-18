@@ -9,7 +9,7 @@ A developer-friendly WordPress-plugin for adding customizable reactions (likes, 
 
 Use shortcode `[air-reactions]` in your content or call hook `air_reactions_display` on your template file
 
-```
+```php
 do_action( 'air_reactions_display', [] );
 ```
 
@@ -18,7 +18,7 @@ It will echo the reaction container with default buttons where called. You can s
 ### Advanced usage
 
 Available parameters are:
-```
+```php
   [
     'echo'    => (bool),
     'types'   => (array),
@@ -28,7 +28,7 @@ Available parameters are:
 #### Example:
 
 This will return the markup for reacting the post id '5' with only hearts
-```
+```php
 do_action(
   'air_reactions_display',
   [
@@ -40,7 +40,7 @@ do_action(
 ```
 
 Same as a shortcode (echoing is always disabled in shortcode):
-```
+```php
 [air-reactions types="heart" post_id="5"]
 ```
 
@@ -48,7 +48,7 @@ Same as a shortcode (echoing is always disabled in shortcode):
 
 Prefix comment id with `comment-` to enable reaction for a comment
 
-```
+```php
 do_action(
   'air_reactions_display',
   [ 'post_id' => 'comment-' . $comment->comment_ID, ]
@@ -63,7 +63,7 @@ do_action(
 
   Default: `true`
 
-  ```
+  ```php
   add_filter( 'air_reactions_load_default_styles', '__return_false' );
   ```
 
@@ -73,7 +73,7 @@ do_action(
 
   Default: `[ 'post', 'page', 'comment' ]`
 
-  ```
+  ```php
   add_filter( 'air_reactions_post_types', function( (array) $post_types ) {
     return [ 'post', 'page' ];
   } );
@@ -85,7 +85,7 @@ do_action(
 
   Default: `false`
 
-  ```
+  ```php
   add_filter( 'air_reactions_require_login', function( (bool) $require_login ) {
     return true;
   } );
@@ -97,7 +97,7 @@ do_action(
 
   Default: `read`
 
-  ```
+  ```php
   add_filter( 'air_reactions_capability', function( (string) $capability ) {
     return 'read';
   } );
@@ -105,7 +105,7 @@ do_action(
 
   ### Filter post reactions after they are loaded from meta and counted
 
-  ```
+  ```php
   add_filter( 'air_reactions_count_post_reactions', function( (array) $post_reactions, (int) $post_id, (string) $meta_key ) {
     // Do something
     return $post_reactions;
@@ -115,7 +115,7 @@ do_action(
   ### Set default reaction types
 
   #### Default:
-  ```
+  ```php
   [
     'heart' => [
       'icon_path' => plugin_dir_path( __DIR__ ) . 'svg/heart.svg',
@@ -144,7 +144,7 @@ do_action(
   ]
   ```
   #### Example:
-  ```
+  ```php
   add_filter( 'air_reactions_types', function( (array) $default_types ) {
     return [
       'heart' => [
@@ -162,7 +162,7 @@ do_action(
   ### Modify reaction item markup
 
   You can use this to build your own reaction item, just remember to add data-attributes like in the original, the javascript depends entirely on those. Feel free to modify the structure and classes etc.
-  ```
+  ```php
   add_filter( 'air_reactions_reaction_item', function( (string) $output, (string) $key, (array) $item ) {
     // Do something
     return $output;
@@ -173,14 +173,14 @@ do_action(
 
   You can change the markup or add wrapper etc. Just remember to add data-attributes like in the original, the javascript depends entirely on those.
 
-  ```
+  ```php
   add_filter( 'air_reactions_container_start', function( (string) $output, (array) $args, (bool), (int) $current_user_id ) {
     // Do something
     return $output;
   });
   ```
 
-  ```
+  ```php
   add_filter( 'air_reactions_container_start', function( (string) $output, (array) $args, (bool), (int) $current_user_id ) {
     // Do something
     return $output;
@@ -189,7 +189,7 @@ do_action(
 
   ### Customize message shown to non-logged in users when login is required
 
-  ```
+  ```php
   add_filter( 'air_reactions_login_required_message', function() {
     return 'Login to like this';
   });
@@ -199,7 +199,7 @@ do_action(
 
   Reaction items are queried from DOM and initialized once after page has loaded. You can check for new reaction items, for example after loading content from AJAX, by simply triggering the event `initAirReactions`.
 
-  ```
+  ```js
   const event = new Event('initAirReactions');
   window.dispatchEvent(event);
   ```
