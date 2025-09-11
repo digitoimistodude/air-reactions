@@ -1,6 +1,6 @@
 {
   "name": "air-reactions",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A developer friendly plugin to enable reactions in your posts and comments",
   "main": "index.js",
   "scripts": {
